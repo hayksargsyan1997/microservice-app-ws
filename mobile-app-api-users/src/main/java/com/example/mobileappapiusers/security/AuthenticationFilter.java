@@ -1,7 +1,7 @@
 package com.example.mobileappapiusers.security;
 
-import com.example.mobileappapiusers.model.LoginRequest;
-import com.example.mobileappapiusers.model.UserRest;
+import com.example.mobileappapiusers.controller.dto.UserDto;
+import com.example.mobileappapiusers.model.LoginRequestModel;
 import com.example.mobileappapiusers.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -42,7 +43,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse response) throws AuthenticationException {
 
         try {
-            LoginRequest credentials = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+            LoginRequestModel credentials = new ObjectMapper()
+                    .readValue(request.getInputStream(), LoginRequestModel.class);
 
 
             return getAuthenticationManager().authenticate(
@@ -65,10 +67,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
         String username = ((User) authResult.getPrincipal()).getUsername();
-        UserRest userDetailsByEmail = userService.getUserDetailsByEmail(username);
+        UserDto userDetailsByEmail = userService.getUserDetailsByEmail(username);
         String token = Jwts.builder()
                 .setSubject(userDetailsByEmail.getUserId())
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("token.expiration_time"))))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(Objects.requireNonNull(environment.getProperty("token.expiration_time")))))
                 .signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret"))
                 .compact();
         logger.info(environment.getProperty("token.expiration_time"));

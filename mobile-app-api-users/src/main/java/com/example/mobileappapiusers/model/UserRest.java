@@ -1,15 +1,20 @@
 package com.example.mobileappapiusers.model;
 
-import java.io.Serializable;
+public class UserRest {
 
-public class UserRest implements Serializable {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private String userId;
-    private String encryptedPassword;
 
+    String firstName;
+    String lastName;
+    String email;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -33,29 +38,5 @@ public class UserRest implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getEncryptedPassword() {
-        return encryptedPassword;
-    }
-
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
     }
 }
